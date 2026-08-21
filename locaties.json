@@ -1,0 +1,16 @@
+[
+  {
+    "id": "ruinekerk",
+    "name": "Ruïnekerk Oude Niedorp",
+    "lat": 52.719804,
+    "lon": 4.878203,
+    "file": "ruinekerk.html"
+  },
+  {
+    "id": "skarpet",
+    "name": "Strandbad 't Skarpet",
+    "lat": 52.717477,
+    "lon": 4.872393,
+    "file": "skarpet.html"
+  }
+]

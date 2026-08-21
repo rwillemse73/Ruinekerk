@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#183948">
+<title>Oude Niedorp • Reisgids</title>
+<style>
+:root{--n:#183948;--t:#3e7a77;--r:#ae5b40;--c:#f5f2eb;--ink:#293438}
+*{box-sizing:border-box}body{margin:0;background:var(--c);color:var(--ink);font-family:Arial,sans-serif}
+header{background:linear-gradient(145deg,#183948,#285765);color:#fff;padding:30px 20px}
+.ey{font-size:10px;font-weight:700;letter-spacing:1.4px;color:#e4b3a1}h1{font-size:29px;margin:8px 0}.sub{font:italic 16px Georgia,serif}
+main{max-width:760px;margin:auto;padding:16px}.card{background:#fff;border:1px solid #ddd6ca;border-radius:15px;padding:18px;margin-bottom:14px;box-shadow:0 3px 14px #0001}
+h2{color:var(--n);font-size:20px;margin:0 0 9px}.status{font-weight:700;color:var(--n)}.distance{font-weight:700;color:var(--r);margin:7px 0}
+button{width:100%;padding:14px;border:0;border-radius:10px;background:var(--t);color:#fff;font-weight:700;font-size:15px;margin-top:8px}
+.small{font-size:12px;color:#687276;line-height:1.45}.pill{display:inline-block;background:#e9f0ef;color:var(--n);padding:5px 9px;border-radius:99px;font-size:10px;font-weight:700}
+#content{padding:0}.error{background:#f1ebe0;border-left:4px solid var(--r);padding:12px;border-radius:7px}
+</style>
+</head>
+<body>
+<header><div class="ey">LOCATIEGESTUURDE REISGIDS • PROEF</div><h1>Oude Niedorp</h1><div class="sub">Een kleine testomgeving voor meerdere reisbestemmingen.</div></header>
+<main>
+<section class="card">
+<span class="pill">GPS-ACTIEF</span>
+<h2>Automatische locatiecheck</h2>
+<div id="status" class="status">Start de automatische locatiecheck één keer.</div>
+<div id="distance" class="distance"></div>
+<button onclick="startTracking()">📍 Start automatische locatiecheck</button>
+<p class="small">De app leest de locaties uit <b>locaties.json</b>. Er kan een willekeurig aantal locaties worden toegevoegd. Binnen de ingestelde straal wordt automatisch het bijbehorende inhoudsbestand geladen.</p>
+</section>
+<div id="content"></div>
+</main>
+<script>
+const TRIGGER=250;
+let locations=[],watchId=null,activeId=null;
+function distance(a,b,c,d){const R=6371000,p=Math.PI/180,x=(c-a)*p,y=(d-b)*p,q=Math.sin(x/2)**2+Math.cos(a*p)*Math.cos(c*p)*Math.sin(y/2)**2;return 2*R*Math.asin(Math.sqrt(q))}
+async function loadLocations(){
+ const r=await fetch("locaties.json",{cache:"no-store"});
+ if(!r.ok) throw new Error("locaties.json kon niet worden geladen");
+ locations=await r.json();
+}
+async function showLocation(loc){
+ const box=document.getElementById("content");
+ if(activeId===loc.id)return;
+ activeId=loc.id;
+ box.innerHTML='<section class="card"><span class="pill">JE BENT HIER</span><h2>'+loc.name+'</h2><p class="small">Inhoud wordt geladen…</p></section>';
+ try{
+   const r=await fetch("content/"+loc.file,{cache:"no-store"});
+   if(!r.ok)throw new Error();
+   box.innerHTML=await r.text();
+   box.scrollIntoView({behavior:"smooth"});
+ }catch(e){
+   box.innerHTML='<section class="card error"><b>Inhoud niet gevonden.</b><p>Controleer het bestand <code>content/'+loc.file+'</code>.</p></section>';
+ }
+}
+async function startTracking(){
+ const s=document.getElementById("status");
+ if(!navigator.geolocation){s.textContent="Deze browser ondersteunt geen GPS.";return}
+ if(watchId!==null){s.textContent="📍 Automatische locatiecheck is al actief.";return}
+ try{await loadLocations()}catch(e){s.textContent="⚠️ De locatiegegevens konden niet worden geladen.";return}
+ s.textContent="📡 Automatische locatiecheck wordt gestart…";
+ watchId=navigator.geolocation.watchPosition(async pos=>{
+   let best=null;
+   for(const loc of locations){
+     const m=Math.round(distance(pos.coords.latitude,pos.coords.longitude,loc.lat,loc.lon));
+     if(!best||m<best.m)best={loc,m};
+   }
+   if(!best)return;
+   document.getElementById("distance").textContent=best.m+" meter van "+best.loc.name;
+   if(best.m<=TRIGGER){
+     s.textContent="✅ Je bent bij "+best.loc.name+".";
+     await showLocation(best.loc);
+   }else{
+     s.textContent="📍 Je bent nog buiten de locatiezones.";
+     if(activeId!==null){document.getElementById("content").innerHTML="";activeId=null}
+   }
+ },()=>{s.textContent="⚠️ GPS kon niet worden gelezen. Controleer locatie-toestemming voor Chrome."},
+ {enableHighAccuracy:true,timeout:15000,maximumAge:10000});
+}
+</script>
+</body>
+</html>
