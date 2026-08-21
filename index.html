@@ -2,87 +2,52 @@
 <html lang="nl">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#183948">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Ruïnekerk Proef">
-<link rel="manifest" href="manifest.webmanifest">
-<title>Ruïnekerk Proef</title>
+<title>GPS-test Ruïnekerk</title>
 <style>
-:root{--navy:#183948;--teal:#3e7a77;--rust:#ae5b40;--cream:#f5f2eb;--ink:#293438}
-*{box-sizing:border-box}body{margin:0;background:var(--cream);color:var(--ink);font-family:Georgia,serif}
-header{background:linear-gradient(145deg,#183948,#285765);color:white;padding:34px 22px 28px}
-.ey{font:700 10px Arial,sans-serif;letter-spacing:1.5px;color:#e4b3a1}
-h1{font:700 31px Arial,sans-serif;margin:8px 0 6px;line-height:1.05}.sub{font-size:16px;font-style:italic;line-height:1.35}
-main{max-width:720px;margin:auto;padding:16px 16px 30px}.card{background:#fff;border:1px solid #ddd6ca;border-radius:16px;padding:18px;margin-bottom:14px;box-shadow:0 4px 16px #0000000d}
-h2{font:700 20px Arial,sans-serif;color:var(--navy);margin:0 0 9px}h3{font:700 11px Arial,sans-serif;letter-spacing:1px;text-transform:uppercase;color:var(--rust);margin:20px 0 6px}
-p,li{line-height:1.58}.status{font:700 14px Arial,sans-serif;color:var(--navy)}.distance{font:700 23px Arial,sans-serif;color:var(--rust);margin:8px 0}
-button{width:100%;border:0;border-radius:11px;padding:14px;margin-top:9px;background:var(--teal);color:white;font:bold 15px Arial,sans-serif}
-button.dark{background:var(--navy)}.small{font:12px Arial,sans-serif;color:#687276;line-height:1.45}.pill{display:inline-block;background:#e9f0ef;color:var(--navy);border-radius:99px;padding:5px 9px;font:bold 10px Arial,sans-serif}
-.quote{background:#e9f0ef;border-left:4px solid var(--rust);padding:13px 14px;border-radius:8px;margin-top:14px}.quote strong{font:700 10px Arial,sans-serif;color:var(--rust);letter-spacing:.8px;text-transform:uppercase}.quote em{display:block;margin-top:5px;color:var(--navy)}
-.hidden{display:none}.install{background:#f1ebe0}.ok{color:#286a55}.warn{color:#9b4d35}
-footer{text-align:center;padding:0 18px 30px}
+body{margin:0;background:#f5f2eb;color:#293438;font-family:Arial,sans-serif}
+main{max-width:520px;margin:auto;padding:24px}
+.card{background:white;border-radius:16px;padding:22px;box-shadow:0 3px 15px #0001}
+h1{color:#183948;font-size:27px}
+button{width:100%;padding:16px;border:0;border-radius:10px;background:#3e7a77;color:white;font-size:16px;font-weight:bold}
+#result{margin-top:20px;font-size:18px;line-height:1.5}
+.small{font-size:13px;color:#667;line-height:1.5}
 </style>
 </head>
 <body>
-<header>
-<div class="ey">GPS-REISPROEF • OUDE NIEDORP</div>
-<h1>Ruïnekerk Oude Niedorp</h1>
-<div class="sub">Een kerk die door het landschap werd gevormd — en uiteindelijk door bliksem tot ruïne werd.</div>
-</header>
 <main>
-<section class="card install">
-<span class="pill">PROEFVERSIE</span>
-<h2>Maak er een app van</h2>
-<p>Open deze pagina op je telefoon via HTTPS en kies daarna <b>‘Zet op beginscherm’</b> of <b>‘Installeer app’</b>. Daarna opent hij als een zelfstandige reisapp.</p>
-<p class="small">iPhone: Safari → Deel → Zet op beginscherm. Android: Chrome → menu ⋮ → App installeren / Toevoegen aan startscherm.</p>
-</section>
-
-<section class="card">
-<h2>📍 Ben ik hier?</h2>
-<div id="status" class="status">Druk op de knop om je locatie te controleren.</div>
-<div id="distance" class="distance"></div>
-<button onclick="checkLocation()">Controleer mijn locatie</button>
-<button class="dark" onclick="showStory()">Lees het verhaal</button>
-<p class="small">De proef gebruikt een ruime GPS-zone van ongeveer 150 meter. GPS kan door gebouwen, bomen en telefooninstellingen afwijken.</p>
-</section>
-
-<section id="story" class="card hidden">
-<h2>De geschiedenis</h2>
-<p>De kerk staat aan de oude Dorpsstraat van Oude Niedorp en werd oorspronkelijk in het midden van de 13e eeuw van steen gebouwd op een terp. In de 14e eeuw begon de kerk te verzakken doordat het veen inklinkte. De kerk werd opnieuw opgebouwd, maar de bodem bleef de geschiedenis van het gebouw bepalen.</p>
-<p>De huidige kerkmuren dateren uit 1648. Op 3 april 1977 sloeg de bliksem in. De daaropvolgende brand verwoestte een groot deel van de kerk. De huidige ruïne is het resultaat van die brand en de latere keuze om de overgebleven delen te conserveren.</p>
-<p>In 2011 werd besloten de ruïne te conserveren en veilig toegankelijk te maken. In 2013 werd de Ruïnekerk opnieuw opengesteld.</p>
-
-<div class="quote"><strong>Kijk eens om je heen</strong><em>Kijk naar de hoogte waarop de kerk ligt en naar de open ruimte rond de Dorpsstraat. De geschiedenis van het gebouw is ook een verhaal over de bodem waarop het staat.</em></div>
-
-<div class="quote"><strong>Verdiepingsvraag</strong><em>Hoeveel van de geschiedenis van een gebouw wordt eigenlijk bepaald door het landschap waarop het staat?</em></div>
-
-<h3>Drie dingen om te bekijken</h3>
-<ol>
-<li><b>De bakstenen kerkmuren</b> — de zichtbare resten van het kerkgebouw uit 1648.</li>
-<li><b>De terp en begraafplaats</b> — de ligging vertelt iets over de relatie tussen kerk, dorp en landschap.</li>
-<li><b>De ruïne zelf</b> — het huidige beeld is het gevolg van de brand van 1977 en de bewuste keuze om de resten te conserveren.</li>
-</ol>
-<p class="small">De Stichting Ruïnekerk vermeldt dat de ruïne in principe dagelijks van zonsopgang tot zonsondergang toegankelijk is, maar incidenteel gesloten kan zijn.</p>
-</section>
+<div class="card">
+<h1>📍 GPS-test Ruïnekerk</h1>
+<p>Deze proef doet maar één ding: bepalen hoe ver je van de Ruïnekerk Oude Niedorp bent.</p>
+<button onclick="locate()">Gebruik mijn locatie</button>
+<div id="result"></div>
+<p class="small">Voor deze test gebruiken we als proefpunt: 52.719804, 4.878203.</p>
+</div>
 </main>
-<footer class="small">Proof of concept voor de locatiegestuurde Argentinië-reisapp.</footer>
 <script>
-const target={lat:52.719804,lon:4.878203}, trigger=150;
-function dist(a,b,c,d){const R=6371000,p=Math.PI/180,x=(c-a)*p,y=(d-b)*p,q=Math.sin(x/2)**2+Math.cos(a*p)*Math.cos(c*p)*Math.sin(y/2)**2;return 2*R*Math.asin(Math.sqrt(q))}
-function checkLocation(){
- const s=document.getElementById('status'),d=document.getElementById('distance');
- if(!navigator.geolocation){s.textContent='Deze browser ondersteunt geen GPS.';return}
- s.textContent='Locatie wordt bepaald…';d.textContent='';
- navigator.geolocation.getCurrentPosition(pos=>{
-  const n=Math.round(dist(pos.coords.latitude,pos.coords.longitude,target.lat,target.lon));
-  d.textContent=n+' meter van het proefpunt';
-  if(n<=trigger){s.innerHTML='✅ <span class="ok">Je bent bij de Ruïnekerk-proeflocatie.</span>';showStory()}
-  else s.innerHTML='Nog niet op de proeflocatie. Loop richting de Ruïnekerk en controleer opnieuw.';
- },()=>{s.innerHTML='⚠️ <span class="warn">GPS kon niet worden gelezen. Controleer de locatie-toestemming.</span>'},{enableHighAccuracy:true,timeout:10000,maximumAge:30000});
+const target={lat:52.719804,lon:4.878203};
+function distance(a,b,c,d){
+ const R=6371000,p=Math.PI/180;
+ const x=(c-a)*p,y=(d-b)*p;
+ const q=Math.sin(x/2)**2+Math.cos(a*p)*Math.cos(c*p)*Math.sin(y/2)**2;
+ return 2*R*Math.asin(Math.sqrt(q));
 }
-function showStory(){const e=document.getElementById('story');e.classList.remove('hidden');e.scrollIntoView({behavior:'smooth'})}
-if("serviceWorker" in navigator) window.addEventListener("load",()=>navigator.serviceWorker.register("service-worker.js"));
+function locate(){
+ const r=document.getElementById('result');
+ if(!navigator.geolocation){r.textContent='Deze browser ondersteunt geen GPS.';return;}
+ r.textContent='📡 Locatie wordt bepaald…';
+ navigator.geolocation.getCurrentPosition(
+  pos=>{
+   const m=Math.round(distance(pos.coords.latitude,pos.coords.longitude,target.lat,target.lon));
+   r.innerHTML='✅ GPS werkt.<br><br><b>Afstand tot het proefpunt: '+m+' meter</b><br><br>Je huidige GPS-coördinaten zijn ontvangen.';
+  },
+  err=>{
+   r.innerHTML='❌ GPS kon niet worden gelezen.<br><br>Controleer of Chrome toestemming heeft om je locatie te gebruiken.';
+  },
+  {enableHighAccuracy:true,timeout:15000,maximumAge:0}
+ );
+}
 </script>
-</body></html>
+</body>
+</html>
