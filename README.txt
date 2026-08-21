@@ -1,16 +1,13 @@
-RUÏNEKERK OUDE NIEDORP — INSTALLEERBARE PWA-PROEF
+RUÏNEKERK — PROEF250METER
 
-1. Zet de inhoud van deze map op een HTTPS-webadres.
-2. Open index.html op de telefoon via dat HTTPS-adres.
-3. Geef locatie-toestemming.
-4. Kies:
-   iPhone/Safari: Deel → Zet op beginscherm.
-   Android/Chrome: menu ⋮ → App installeren / Toevoegen aan startscherm.
-5. Open daarna het nieuwe icoon als een app.
-6. Test bij de Ruïnekerk met 'Controleer mijn locatie'.
+Bestand met de echte proef:
+ruinekerk-proef250meter.html
 
-Let op:
-- Geolocatie werkt normaal alleen via HTTPS (of localhost).
-- De proefcoördinaat is 52.719804, 4.878203 en de triggerzone is 150 meter.
-- Voor productie moet de exacte GPS-positie van het kerkgebouw nog worden vastgelegd.
-- De app is offline voorbereid, maar de eerste keer moet hij via internet worden geopend zodat de bestanden in de cache komen.
+De index.html blijft behouden als startpagina voor GitHub Pages en opent automatisch de benoemde proef.
+
+Deze versie gebruikt continue locatiecontrole zolang de webpagina actief is:
+- >250 m: afstand/status
+- <=250 m: automatisch het verhaal
+- buiten de zone: verhaal weer verborgen
+
+Voor de test: vervang in GitHub de bestaande bestanden door index.html en ruinekerk-proef250meter.html.
