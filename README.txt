@@ -1,1 +1,0 @@
-KAARTVERSIE: interactieve OpenStreetMap-kaart, markers uit locaties.json, GPS-positie, 500m-overzicht en 250m automatische inhoud. Alleen index.html vervangen; locaties.json en content/ blijven hetzelfde.
