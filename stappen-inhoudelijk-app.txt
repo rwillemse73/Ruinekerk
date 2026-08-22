@@ -1,0 +1,19 @@
+STAPPEN-INHOUDELIJK-APP — bijgewerkt t/m Kerk-app volledige proef v1
+
+1. Inventariseren
+2. Onderzoeken & prioriteren
+3. Conceptverhalen
+3b. Kwaliteitscontrole
+4. Definitieve broncontrole
+5. Locatiegegevens
+6. Content structureren
+6b. Contentcontrole
+7. GPS/geocoding
+8. Interactieve kaart/GPS
+8c. Locatie-plus-reisdagboek datamodel
+8d. Ruïnekerk-proef 2.0
+8e. Ruïnekerk-proef 2.1 met twee bestaande losse locaties
+8f. Kerk-app volledige proef v1 — definitieve losse contentstructuur:
+    index.html + locaties.json + locaties/ruinekerk.html + locaties/skarpet.html
+    plus kaart/GPS, testpositie, 500 m, 250 m, bewerken, toevoegen en persoonlijk dagboek.
+Volgende evaluatiestap: echte inhoud/feiten/afbeeldingen per locatie controleren en de opslagstrategie bepalen.
