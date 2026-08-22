@@ -1,0 +1,113 @@
+{
+  "version": "2.1",
+  "test_mode": true,
+  "test_location": {
+    "name": "Ruïnekerk-testpunt",
+    "lat": 52.7,
+    "lon": 4.75
+  },
+  "locations": [
+    {
+      "id": "ruinekerk",
+      "name": "Ruïnekerk",
+      "type": "bezienswaardigheid",
+      "lat": 52.7,
+      "lon": 4.75,
+      "coordinate_status": "exact-testpunt",
+      "editorial": {
+        "title": "Ruïnekerk",
+        "story": "Dit is de bestaande Ruïnekerk-proeflocatie. De tekst kan straks via de bewerkfunctie worden aangepast.",
+        "facts": [
+          {
+            "label": "Type",
+            "value": "Bezienswaardigheid"
+          },
+          {
+            "label": "GPS",
+            "value": "Testpunt"
+          }
+        ],
+        "main_image": null
+      },
+      "current": {
+        "opening_hours": null,
+        "accessibility": null,
+        "temporary_notice": null
+      },
+      "personal": {
+        "visited": false,
+        "visited_dates": [],
+        "rating": null,
+        "notes": [],
+        "photos": []
+      },
+      "editable": true
+    },
+    {
+      "id": "kerk-test",
+      "name": "Kerk – eerdere proef",
+      "type": "bezienswaardigheid",
+      "lat": 52.7008,
+      "lon": 4.7508,
+      "coordinate_status": "testpunt",
+      "editorial": {
+        "title": "Kerk – eerdere proef",
+        "story": "content/kerk.html",
+        "facts": [
+          {
+            "label": "Status",
+            "value": "Eerder gebouwde testlocatie"
+          }
+        ],
+        "main_image": null,
+        "sources": []
+      },
+      "current": {
+        "opening_hours": null,
+        "accessibility": null,
+        "temporary_notice": null
+      },
+      "personal": {
+        "visited": false,
+        "visited_dates": [],
+        "rating": null,
+        "notes": [],
+        "photos": []
+      },
+      "editable": true
+    },
+    {
+      "id": "skarpet-test",
+      "name": "Strandbad Skerpet",
+      "type": "bezienswaardigheid",
+      "lat": 52.7012,
+      "lon": 4.7494,
+      "coordinate_status": "testpunt",
+      "editorial": {
+        "title": "Strandbad Skerpet",
+        "story": "content/strandbad-skerpet.html",
+        "facts": [
+          {
+            "label": "Status",
+            "value": "Eerder gebouwde testlocatie"
+          }
+        ],
+        "main_image": null,
+        "sources": []
+      },
+      "current": {
+        "opening_hours": null,
+        "accessibility": null,
+        "temporary_notice": null
+      },
+      "personal": {
+        "visited": false,
+        "visited_dates": [],
+        "rating": null,
+        "notes": [],
+        "photos": []
+      },
+      "editable": true
+    }
+  ]
+}

@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="nl"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Ruïnekerk proef 2.0</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,sans-serif;background:#f5f2eb;color:#26343a}
+header{background:#fff;padding:14px 16px;border-bottom:1px solid #ddd;position:sticky;top:0;z-index:1000}
+h1{margin:0;font-size:20px}.sub{font-size:12px;color:#68767b}
+#map{height:48vh;min-height:330px}.panel{padding:14px;background:#fff}
+button{border:0;border-radius:10px;padding:10px 13px;margin:3px;font-size:14px;background:#26343a;color:#fff}
+button.secondary{background:#e8e5df;color:#26343a}.status{font-size:13px;margin:8px 3px}
+.card{background:#fff;border:1px solid #ddd;border-radius:14px;padding:14px;margin:10px 0}
+.card h2{margin:0 0 5px;font-size:18px}.distance{font-size:12px;color:#69777b}
+.story{line-height:1.55;font-size:14px}.facts{margin-top:10px}.facts div{padding:4px 0;border-bottom:1px solid #eee}
+label{display:block;font-size:12px;margin-top:9px;font-weight:600}input,textarea,select{width:100%;padding:9px;border:1px solid #ccc;border-radius:8px;font:inherit}textarea{min-height:100px}
+.modal{display:none;position:fixed;inset:0;background:#0008;z-index:2000;padding:15px;overflow:auto}.modalbox{background:#fff;border-radius:16px;padding:16px;max-width:600px;margin:20px auto}
+.warn{font-size:12px;color:#6d5a20;background:#fff7d6;padding:9px;border-radius:9px}
+</style></head>
+<body>
+<header><h1>Ruïnekerk – proef 2.0</h1><div class="sub">Locatie-app + persoonlijk reisdagboek • 2.1</div></header>
+<div id="map"></div>
+<section class="panel">
+<button onclick="locate()">📍 Mijn locatie</button>
+<button onclick="useTestPosition()">🧪 Testpositie</button>
+<button onclick="openAdd()">➕ Locatie toevoegen</button>
+<div id="status" class="status">Testmodus staat aan. Gebruik 'Testpositie' om thuis te testen.</div>
+<div id="nearby"></div>
+</section>
+
+<div id="modal" class="modal"><div class="modalbox">
+<h2 id="modalTitle">Locatie</h2>
+<div id="form"></div>
+<button onclick="saveForm()">Opslaan</button>
+<button class="secondary" onclick="closeModal()">Annuleren</button>
+</div></div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+const initial={"version": "2.0", "test_mode": true, "test_location": {"name": "Ruïnekerk-testpunt", "lat": 52.7, "lon": 4.75}, "locations": [{"id": "ruinekerk", "name": "Ruïnekerk", "type": "bezienswaardigheid", "lat": 52.7, "lon": 4.75, "coordinate_status": "exact-testpunt", "editorial": {"title": "Ruïnekerk", "story": "Dit is de bestaande Ruïnekerk-proeflocatie. De tekst kan straks via de bewerkfunctie worden aangepast.", "facts": [{"label": "Type", "value": "Bezienswaardigheid"}, {"label": "GPS", "value": "Testpunt"}], "main_image": null}, "current": {"opening_hours": null, "accessibility": null, "temporary_notice": null}, "personal": {"visited": false, "visited_dates": [], "rating": null, "notes": [], "photos": []}, "editable": true}]};
+let locations=JSON.parse(localStorage.getItem('ruinekerk_locations')||'null')||initial.locations;
+let userLat=null,userLon=null,editingId=null;
+const map=L.map('map').setView([initial.test_location.lat,initial.test_location.lon],15);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'© OpenStreetMap'}).addTo(map);
+
+function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));}
+function dist(a,b,c,d){const R=6371000,p=Math.PI/180,A=(c-a)*p,B=(d-b)*p,q=Math.sin(A/2)**2+Math.cos(a*p)*Math.cos(c*p)*Math.sin(B/2)**2;return 2*R*Math.atan2(Math.sqrt(q),Math.sqrt(1-q));}
+function fmt(m){return m<1000?Math.round(m)+' m':(m/1000).toFixed(1)+' km';}
+
+function draw(){
+ document.querySelectorAll('.locmarker').forEach(x=>map.removeLayer(x));
+ locations.forEach(x=>{
+  const m=L.marker([x.lat,x.lon],{title:x.name}).addTo(map).bindPopup('<b>'+esc(x.name)+'</b><br>'+esc(x.type));
+  m.getElement().classList.add('locmarker');
+  m.on('click',()=>showCard(x.id));
+ });
+ render();
+}
+function render(){
+ if(userLat===null){document.getElementById('nearby').innerHTML='<div class="card">Gebruik 🧪 Testpositie of 📍 Mijn locatie.</div>';return}
+ const arr=locations.map(x=>({...x,d:dist(userLat,userLon,x.lat,x.lon)})).sort((a,b)=>a.d-b.d);
+ const within=arr.filter(x=>x.d<=500);
+ document.getElementById('status').textContent=within.length+' locatie(s) binnen 500 meter • binnen 250 m = verhaalzone';
+ document.getElementById('nearby').innerHTML=within.map(x=>`
+ <div class="card" id="card-${x.id}">
+ <h2>${esc(x.name)}</h2><div class="distance">${fmt(x.d)} van testpositie</div>
+ <div class="story">${x.d<=250?esc(x.editorial.story):'<span class="distance">Kom binnen 250 meter voor het verhaal.</span>'}</div>
+ <div class="facts">${(x.editorial.facts||[]).map(f=>`<div><b>${esc(f.label)}:</b> ${esc(f.value)}</div>`).join('')}</div>
+ <p>Bezocht: ${x.personal.visited?'ja':'nee'} ${x.personal.rating?'• ⭐ '+x.personal.rating+'/5':''}</p>
+ <button onclick="editLocation('${x.id}')">✏️ Bewerken</button>
+ <button class="secondary" onclick="journal('${x.id}')">📝 Mijn notitie</button>
+ </div>`).join('')||'<div class="card">Geen locaties binnen 500 meter.</div>';
+}
+function showCard(id){document.getElementById('card-'+id)?.scrollIntoView({behavior:'smooth'});}
+
+function useTestPosition(){userLat=initial.test_location.lat;userLon=initial.test_location.lon;map.setView([userLat,userLon],16);render();}
+function locate(){navigator.geolocation.getCurrentPosition(p=>{userLat=p.coords.latitude;userLon=p.coords.longitude;map.setView([userLat,userLon],16);render()},()=>alert('Locatie kon niet worden bepaald.'))}
+
+function openAdd(){editingId=null;document.getElementById('modalTitle').textContent='Nieuwe locatie';formFor({name:'',type:'restaurant',story:'',facts:[],lat:userLat??initial.test_location.lat,lon:userLon??initial.test_location.lon,personal:{visited:true,visited_dates:[new Date().toISOString().slice(0,10)],rating:null,notes:[],photos:[]},editorial:{title:'',story:'',facts:[]}});openModal();}
+function editLocation(id){editingId=id;const x=locations.find(a=>a.id===id);document.getElementById('modalTitle').textContent='Locatie bewerken';formFor(x);openModal();}
+function journal(id){const x=locations.find(a=>a.id===id);editingId=id;document.getElementById('modalTitle').textContent='Persoonlijk dagboek';formFor(x,true);openModal();}
+
+function formFor(x,journalOnly=false){
+ document.getElementById('form').innerHTML=`
+ ${!journalOnly?`<label>Naam</label><input id="name" value="${esc(x.name)}">
+ <label>Type</label><select id="type"><option>bezienswaardigheid</option><option>natuur</option><option>historie</option><option>restaurant</option><option>cafe</option><option>hotel</option><option>eigen-herinnering</option></select>
+ <label>Verhaal</label><textarea id="story">${esc(x.editorial?.story||'')}</textarea>
+ <label>Feiten (één per regel: label | waarde)</label><textarea id="facts">${(x.editorial?.facts||[]).map(f=>f.label+' | '+f.value).join('\\n')}</textarea>`:''}
+ <label>Bezocht</label><select id="visited"><option value="false">Nee</option><option value="true" ${x.personal?.visited?'selected':''}>Ja</option></select>
+ <label>Beoordeling</label><select id="rating"><option value="">Geen</option>${[1,2,3,4,5].map(n=>`<option ${x.personal?.rating==n?'selected':''}>${n}</option>`).join('')}</select>
+ <label>Mijn notitie</label><textarea id="note">${esc((x.personal?.notes||[]).slice(-1)[0]?.text||'')}</textarea>
+ <div class="warn">In deze proef worden wijzigingen lokaal in deze browser opgeslagen. Ze zijn nog niet automatisch gesynchroniseerd met GitHub.</div>`;
+ if(!journalOnly)document.getElementById('type').value=x.type||'restaurant';
+}
+function openModal(){document.getElementById('modal').style.display='block'}
+function closeModal(){document.getElementById('modal').style.display='none'}
+function saveForm(){
+ let x=editingId?locations.find(a=>a.id===editingId):null;
+ if(!x){x={id:'user-'+Date.now(),lat:userLat??initial.test_location.lat,lon:userLon??initial.test_location.lon,editorial:{facts:[]},personal:{visited:false,visited_dates:[],rating:null,notes:[],photos:[]}};locations.push(x)}
+ if(document.getElementById('name')){x.name=document.getElementById('name').value;x.type=document.getElementById('type').value;x.editorial.title=x.name;x.editorial.story=document.getElementById('story').value;x.editorial.facts=document.getElementById('facts').value.split('\\n').filter(Boolean).map(s=>{let [a,...b]=s.split('|');return {label:a.trim(),value:b.join('|').trim()}})}
+ x.personal.visited=document.getElementById('visited').value==='true';x.personal.rating=document.getElementById('rating').value?Number(document.getElementById('rating').value):null;
+ const note=document.getElementById('note').value.trim();if(note)x.personal.notes.push({date:new Date().toISOString().slice(0,10),text:note});
+ localStorage.setItem('ruinekerk_locations',JSON.stringify(locations));closeModal();draw();render();
+}
+useTestPosition();draw();
+</script></body></html>
